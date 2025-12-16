@@ -1,0 +1,39 @@
+environment:
+  name: prod
+  project: cdf-bootcamp-69-prod
+  validation-type: prod
+  selected:
+    - modules/bootcamp/data_foundation
+    - modules/bootcamp/ice_cream_api
+    - modules/bootcamp/use_cases/oee
+
+variables:
+  modules:
+    bootcamp:
+      # --- CHANGE 1: Moved variable here to make it shared ---
+      icapi_ds_external_id: ds_icapi
+      icapi_space_name: icapi_dm_space
+      #data_developer_source_id: ${DATA_DEVELOPER_SOURCE_ID}
+      
+      data_foundation:
+        data_developer_source_id: ${DATA_DEVELOPER_SOURCE_ID}
+        # data_developer_source_id removed from here as it is now in parent scope
+
+      ice_cream_api:
+        icapi_extractor_source_id: ${ICAPI_EXTRACTOR_SOURCE_ID}
+        tokenUri: ${IDP_TOKEN_URL}
+        cdfProjectName: ${CDF_PROJECT}
+        # --- CHANGE 2: Added quotes to handle empty value ---
+        scopes: ${IDP_SCOPES} 
+        icapi_trigger_client_id: ${ICAPI_EXTRACTORS_CLIENT_ID}
+        icapi_trigger_client_secret: ${ICAPI_EXTRACTORS_CLIENT_SECRET}
+        icapi_extractors_client_id: ${ICAPI_EXTRACTORS_CLIENT_ID}
+        icapi_extractors_client_secret: ${ICAPI_EXTRACTORS_CLIENT_SECRET}
+
+      use_cases:
+        oee:
+          data_pipeline_source_id: ${DATA_PIPELINE_OEE_SOURCE_ID}
+          uc_oee_ds_external_id: ds_uc_oee
+          oee_space_name: oee_ts_space
+          data_pipeline_oee_client_id: ${DATA_PIPELINE_OEE_CLIENT_ID}
+          data_pipeline_oee_client_secret: ${DATA_PIPELINE_OEE_CLIENT_SECRET}

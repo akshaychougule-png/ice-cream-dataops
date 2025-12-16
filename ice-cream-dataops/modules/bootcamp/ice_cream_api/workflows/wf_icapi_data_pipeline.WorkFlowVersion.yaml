@@ -1,0 +1,54 @@
+workflowExternalId: wf_icapi_data_pipeline
+version: '1'
+workflowDefinition:
+  tasks:
+  # 1. First Task: Create the Asset Hierarchy
+  # No dependencies, this runs first.
+  - externalId: create_asset_hierarchy_task
+    type: function
+    parameters:
+      function:
+        externalId: create_asset_hierarchy
+    retries: 3
+    timeout: 3600
+    onFailure: abortWorkflow
+
+  # 2. Second Task: Extract Data
+  # Depends on the Asset Hierarchy being created (Sequential flow).
+  - externalId: icapi_datapoints_extractor_task
+    type: function
+    parameters:
+      function:
+        externalId: icapi_datapoints_extractor
+        data: { "hours": 1 }
+    retries: 3
+    timeout: 3600
+    onFailure: abortWorkflow
+    dependsOn:
+      - externalId: create_asset_hierarchy_task
+
+  # 3. Third Task: Contextualize
+  # Must wait for Data and Assets to exist before linking them.
+  - externalId: contextualize_ts_assets_task
+    type: function
+    parameters:
+      function:
+        externalId: contextualize_ts_assets
+    retries: 3
+    timeout: 3600
+    onFailure: abortWorkflow
+    dependsOn:
+      - externalId: icapi_datapoints_extractor_task
+
+  # 4. Fourth Task: Calculate OEE
+  # Cannot run until data is linked (Contextualized).
+  - externalId: oee_timeseries_task
+    type: function
+    parameters:
+      function:
+        externalId: oee_timeseries
+    retries: 3
+    timeout: 3600
+    onFailure: abortWorkflow
+    dependsOn:
+      - externalId: contextualize_ts_assets_task
