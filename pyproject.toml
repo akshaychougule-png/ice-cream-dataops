@@ -1,0 +1,19 @@
+[project]
+name = "ice-cream-dataops"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Akshay Chougule",email = "akshay.chougule@cognite.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11,<4"
+dependencies = [
+    "cognite-toolkit (==0.6.53)"
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode=false
